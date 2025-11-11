@@ -22,9 +22,13 @@ def process_row(entity_to_plant, required_ground_type):
     if entity_to_plant != None:
         plant(entity_to_plant)
         
-    if get_water() < 1000:
+    # Check if we have water and the plot needs it (less than 1000 water)
+    if get_water() < 1000 and num_items(Items.Water) > 0:
         use_item(Items.Water)
-    use_item(Items.Fertilizer)
+        
+    # Check if we have fertilizer before trying to use it
+    if num_items(Items.Fertilizer) > 0:
+        use_item(Items.Fertilizer)
 
 
 def sweep_column(entity_to_plant, required_ground_type):
