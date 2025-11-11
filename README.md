@@ -14,5 +14,5 @@ This repository contains the building blocks for a command-line farming simulato
 Clone the repository to your local machine:
 
 ```bash
-git clone [https://github.com/Magpie512/The-Farmer-Was-Replaced.git](https://github.com/Magpie512/The-Farmer-Was-Replaced.git)
+git clone https://github.com/Magpie512/The-Farmer-Was-Replaced.git
 cd thefarmerwasreplaced
