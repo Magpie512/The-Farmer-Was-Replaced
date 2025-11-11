@@ -1,0 +1,131 @@
+MAX_ROW_DEPTH = 11
+REPLENISH_THRESHOLD = 200
+
+NON_PUMPKIN_COLUMNS = [
+	(Entities.Grass, Grounds.Grassland),
+	(Entities.Bush, None),
+	(Entities.Carrot, Grounds.Soil),
+	(Entities.Sunflower, Grounds.Soil),
+	(Entities.Tree, Grounds.Soil),
+	(Entities.Cactus, Grounds.Soil),
+]
+
+PUMPKIN_COLUMN = (Entities.Pumpkin, Grounds.Soil)
+
+def get_required_item(entity):
+	if entity == Entities.Carrot:
+		return Items.Carrot
+	elif entity == Entities.Pumpkin:
+		return Items.Pumpkin
+	elif entity == Entities.Cactus:
+		return Items.Hay
+	return None
+
+def process_space(entity_to_plant, required_ground_type, col_index, row_index):
+	is_special_bush = (col_index == 1) and (row_index == 11)
+	required_item = get_required_item(entity_to_plant)
+
+	if can_harvest():
+		if is_special_bush:
+			if get_entity_type() == entity_to_plant:
+				harvest()
+		else:
+			harvest()
+
+	if required_ground_type != None:
+		current_ground = get_ground_type()
+
+		if current_ground != required_ground_type:
+			till()
+
+	if entity_to_plant != None:
+		if required_item != None and num_items(required_item) <= 0:
+			pass
+		elif is_special_bush:
+			if get_entity_type() != entity_to_plant:
+				plant(entity_to_plant)
+		else:
+			plant(entity_to_plant)
+
+	if entity_to_plant == Entities.Cactus or entity_to_plant == Entities.Pumpkin:
+		if get_water() < 1000 and num_items(Items.Water) > 0:
+			use_item(Items.Water)
+
+	if num_items(Items.Fertilizer) > 0:
+		if is_special_bush:
+			use_item(Items.Fertilizer)
+		else:
+			use_item(Items.Fertilizer)
+
+
+def sweep_column(entity_to_plant, required_ground_type, col_index):
+	process_space(entity_to_plant, required_ground_type, col_index, 0)
+
+	for row_index in range(1, MAX_ROW_DEPTH + 1):
+		move(South)
+		process_space(entity_to_plant, required_ground_type, col_index, row_index)
+
+	for count in range(MAX_ROW_DEPTH):
+		move(North)
+
+
+def find_and_replenish(col_index, target_entity):
+	
+	if target_entity == Entities.Carrot:
+		entity, ground = Entities.Carrot, Grounds.Soil
+	elif target_entity == Entities.Cactus:
+		entity, ground = Entities.Cactus, Grounds.Soil
+	elif target_entity == Entities.Pumpkin:
+		entity, ground = PUMPKIN_COLUMN[0], PUMPKIN_COLUMN[1]
+	else:
+		entity, ground = Entities.Sunflower, Grounds.Soil
+	
+	sweep_column(entity, ground, col_index)
+
+
+clear()
+change_hat(Hats.Wizard_Hat)
+
+while True:
+	current_col_position = 0
+	
+	needs_carrot = num_items(Items.Carrot) < REPLENISH_THRESHOLD
+	needs_pumpkin = num_items(Items.Pumpkin) < REPLENISH_THRESHOLD
+	needs_cactus = num_items(Items.Hay) < REPLENISH_THRESHOLD
+	
+	for index in range(len(NON_PUMPKIN_COLUMNS)):
+		
+		if (index == 2 or index == 3) and needs_carrot:
+			find_and_replenish(index, Entities.Carrot)
+		elif index == 5 and needs_cactus:
+			find_and_replenish(index, Entities.Cactus)
+		else:
+			entity = NON_PUMPKIN_COLUMNS[index][0]
+			ground_type = NON_PUMPKIN_COLUMNS[index][1]
+			sweep_column(entity, ground_type, index)
+			
+		if index < len(NON_PUMPKIN_COLUMNS) - 1:
+			move(East)
+			current_col_position += 1
+
+	move(East)
+	current_col_position += 1
+	
+	PUMPKIN_ENTITY, PUMPKIN_GROUND = PUMPKIN_COLUMN
+	PUMPKIN_ITEM = get_required_item(PUMPKIN_ENTITY)
+	
+	for count in range(6):
+		
+		if needs_pumpkin:
+			sweep_column(PUMPKIN_ENTITY, PUMPKIN_GROUND, 99)
+		elif num_items(PUMPKIN_ITEM) <= 0:
+			break
+		else:
+			sweep_column(PUMPKIN_ENTITY, PUMPKIN_GROUND, 99)
+		
+		if count < 5:
+			move(East)
+			current_col_position += 1
+			
+	for i in range(current_col_position):
+		move(West)
