@@ -1,0 +1,96 @@
+clear()
+change_hat(Hats.Wizard_Hat)
+while True:
+	
+	# Column 0: Bush
+	if can_harvest():
+		harvest()
+	plant(Entities.Bush)
+	
+	for row in range(1, 6): 
+		move(South)
+		
+		if can_harvest():
+			harvest()
+			
+		plant(Entities.Bush)
+			
+	for count in range(5):
+		move(North)
+
+	# Column 1: Bush
+	move(East)
+	for row in range(6):
+		if can_harvest():
+			harvest()
+			
+		plant(Entities.Bush)
+		
+		if row < 5:
+			move(South)
+
+	for count in range(5):
+		move(North)
+
+	# Column 2: Carrots
+	move(East)
+	for row in range(6):
+		if can_harvest():
+			harvest()
+			
+		if get_ground_type() != Grounds.Soil:
+			till()
+		plant(Entities.Carrot)
+		
+		if row < 5:
+			move(South)
+			
+	for count in range(5):
+		move(North)
+
+	# Column 3: Carrots
+	move(East)
+	for row in range(6):
+		if can_harvest():
+			harvest()
+			
+		if get_ground_type() != Grounds.Soil:
+			till()
+		plant(Entities.Carrot)
+		
+		if row < 5:
+			move(South)
+
+	for count in range(5):
+		move(North)
+        
+	# Column 4: Grass
+	move(East)
+	for row in range(6):
+		if can_harvest():
+			harvest()
+			
+		if get_ground_type() != Grounds.Grassland:
+			till()
+		
+		if row < 5:
+			move(South)
+
+	for count in range(5):
+		move(North)
+
+	# Column 5: Grass
+	move(East)
+	for row in range(6):
+		if can_harvest():
+			harvest()
+			
+		if get_ground_type() != Grounds.Grassland:
+			till()
+		
+		if row < 5:
+			move(South)
+
+	# Reset to (0, 0)
+	for count in range(5):
+		move(West)
