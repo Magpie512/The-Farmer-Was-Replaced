@@ -9,13 +9,6 @@ A collection of **Python** code snippets and modules for a surreal, "whack" farm
 
 This repository contains the building blocks for a command-line farming simulator where the traditional rules of agriculture are deliberately broken. The focus is on implementing bizarre game features and ensuring the underlying Python logic is sound before integrating with a full game engine.
 
-
-## Getting Started
-
-### Prerequisites
-
-You must have **Python 3.x** installed on your system to run these code snippets.
-
 ### Installation
 
 Clone the repository to your local machine:
