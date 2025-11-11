@@ -1,0 +1,62 @@
+clear()
+change_hat(Hats.Wizard_Hat) #IMPORTANT
+while True:
+	
+	if can_harvest():
+		harvest()
+	plant(Entities.Bush)
+	
+	for row in range(1, 4): 
+		move(South)
+		
+		if can_harvest():
+			harvest()
+			
+		plant(Entities.Bush) 
+			
+	for count in range(3):
+		move(North)
+
+	move(East)
+	for row in range(4):
+		if can_harvest():
+			harvest()
+			
+		if get_ground_type() != Grounds.Soil:
+			till()
+		plant(Entities.Carrot)
+		
+		if row < 3:
+			move(South)
+
+	for count in range(3):
+		move(North)
+
+	move(East)
+	for row in range(4):
+		if can_harvest():
+			harvest()
+			
+		if get_ground_type() != Grounds.Soil:
+			till()
+		plant(Entities.Carrot)
+		
+		if row < 3:
+			move(South)
+			
+	for count in range(3):
+		move(North)
+
+	move(East)
+	for row in range(4):
+		if can_harvest():
+			harvest()
+			
+		if get_ground_type() != Grounds.Grassland:
+			till()
+		
+		if row < 3:
+			move(South)
+
+	for count in range(3):
+		move(West)
