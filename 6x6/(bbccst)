@@ -1,0 +1,57 @@
+MAX_ROW_DEPTH = 5
+
+COLUMNS = [
+    (Entities.Bush, None),
+    (Entities.Bush, None),
+    (Entities.Carrot, Grounds.Soil),
+    (Entities.Carrot, Grounds.Soil),
+    (Entities.Sunflower, Grounds.Soil), 
+    (Entities.Tree, Grounds.Soil),
+]
+
+def process_row(entity_to_plant, required_ground_type):
+    if can_harvest():
+        harvest()
+    
+    if required_ground_type != None:
+        current_ground = get_ground_type()
+        
+        if current_ground != required_ground_type:
+            till()
+            
+    if entity_to_plant != None:
+        plant(entity_to_plant)
+        
+    if get_water() < 1000:
+        use_item(Items.Water)
+    use_item(Items.Fertilizer)
+
+
+def sweep_column(entity_to_plant, required_ground_type):
+    process_row(entity_to_plant, required_ground_type)
+    
+    for row in range(1, MAX_ROW_DEPTH + 1):
+        move(South)
+        process_row(entity_to_plant, required_ground_type)
+        
+    for count in range(MAX_ROW_DEPTH):
+        move(North)
+
+
+clear()
+change_hat(Hats.Wizard_Hat)
+
+while True:
+    
+    for index in range(len(COLUMNS)):
+        entity = COLUMNS[index][0]
+        ground_type = COLUMNS[index][1]
+        
+        sweep_column(entity, ground_type)
+        
+        if index < len(COLUMNS) - 1:
+            move(East)
+            
+    num_columns_to_reset = len(COLUMNS) - 1
+    for count in range(num_columns_to_reset):
+        move(West)
