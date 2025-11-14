@@ -1,0 +1,10 @@
+while True:
+	if can_harvest():
+		change_hat(Hats.Straw_Hat)
+		harvest()
+	else:
+		change_hat(Hats.Brown_Hat)
+		move(North)
+		plant(Entities.Bush)
+	
+		
